@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/constants/colors.dart';
-import 'package:whatsapp/models/message.dart';
+
+import 'package:whatsapp/constants/constants.dart';
+import 'package:whatsapp/models/models.dart';
 
 class SentMessage extends StatelessWidget {
   const SentMessage({

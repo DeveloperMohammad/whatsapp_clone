@@ -1,18 +1,18 @@
-
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:whatsapp/screens/settings_screen.dart';
 
 //! My own classess
-import '../delegates/my_search_delegate.dart';
-import '../screens/status_screen.dart';
-import 'chat_screen/chats_screen.dart';
-import '../screens/call_screen.dart';
-import '../widgets/build_tab.dart';
+import 'screens.dart';
+import 'package:whatsapp/widgets/widgets.dart';
+import 'package:whatsapp/delegates/my_search_delegate.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  static Route get route => MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +39,23 @@ class HomeScreen extends StatelessWidget {
                 Navigator.of(context).pushNamed(SettingsScreen.routeName);
               },
               itemBuilder: (context) => [
-                const PopupMenuItem(child: Text('New group'), value: 'new group',),
-                const PopupMenuItem(child: Text('New broadcast'), value: 'new broadcast',),
-                const PopupMenuItem(child: Text('Linked devices'), value: 'linked devices',),
-                const PopupMenuItem(child: Text('Starred messages'), value: 'starred messages',),
-                 PopupMenuItem(
+                const PopupMenuItem(
+                  child: Text('New group'),
+                  value: 'new group',
+                ),
+                const PopupMenuItem(
+                  child: Text('New broadcast'),
+                  value: 'new broadcast',
+                ),
+                const PopupMenuItem(
+                  child: Text('Linked devices'),
+                  value: 'linked devices',
+                ),
+                const PopupMenuItem(
+                  child: Text('Starred messages'),
+                  value: 'starred messages',
+                ),
+                PopupMenuItem(
                   enabled: true,
                   value: 'settings',
                   onTap: () {

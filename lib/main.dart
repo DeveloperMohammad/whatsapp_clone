@@ -1,16 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsapp/screens/chat_screen/add_chat_screen.dart';
-import 'package:whatsapp/screens/profile_screen.dart';
-import 'package:whatsapp/screens/settings_screen.dart';
+import 'package:whatsapp/screens/login_screen.dart';
 
-import 'screens/chat_screen/chat_detail_screen.dart';
-import 'screens/chat_screen/chat_info_screen.dart';
-import 'screens/home_screen.dart';
+import 'package:whatsapp/screens/screens.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MaterialApp(
-      title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -18,14 +17,56 @@ void main() {
         ),
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const HomePage(),
       routes: {
-        ChatDetailScreen.routeName: (context) => const ChatDetailScreen(),
-        ChatInfoScreen.routeName: (context) => const ChatInfoScreen(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
         ProfileScreen.routeName: (context) => const ProfileScreen(),
         AddChatScreen.routeName: (context) => AddChatScreen(),
       },
     ),
   );
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
+  static Route get route => MaterialPageRoute(
+        builder: (context) => const HomePage(),
+      );
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: FirebaseAuth.instance.userChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          if (snapshot.hasData) {
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (user.emailVerified) {
+                return const HomeScreen();
+              } else {
+                return const EmailVerifyScreen();
+              }
+            } else {
+              return const LoginScreen();
+            }
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return const LoginScreen();
+      },
+    );
+  }
 }

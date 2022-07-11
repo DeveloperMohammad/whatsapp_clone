@@ -1,22 +1,84 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:whatsapp/constants/enums.dart';
-import 'package:whatsapp/models/chat.dart';
-import 'package:whatsapp/screens/chat_screen/chat_info_screen.dart';
-import 'package:whatsapp/widgets/chat_screen/received_message.dart';
+import 'package:uuid/uuid.dart';
+import 'package:whatsapp/helpers/firestore_methods.dart';
 
-import 'package:whatsapp/models/message.dart';
-import 'package:whatsapp/widgets/chat_screen/sent_message.dart';
+import 'package:whatsapp/models/models.dart';
+import 'package:whatsapp/screens/screens.dart';
+import 'package:whatsapp/widgets/widgets.dart';
 
-class ChatDetailScreen extends StatelessWidget {
-  const ChatDetailScreen({Key? key}) : super(key: key);
+class ChatDetailScreen extends StatefulWidget {
+  const ChatDetailScreen({
+    Key? key,
+    required this.username,
+    required this.fullName,
+    required this.chatRoomId,
+    required this.imageUrl,
+  }) : super(key: key);
 
-  static const routeName = '/chat_detail';
+  final String username;
+  final String fullName;
+  final String imageUrl;
+  final String chatRoomId;
+
+  @override
+  State<ChatDetailScreen> createState() => _ChatDetailScreenState();
+}
+
+class _ChatDetailScreenState extends State<ChatDetailScreen> {
+  final TextEditingController _messageController = TextEditingController();
+
+  String myUserName = '';
+
+  @override
+  void dispose() {
+    super.dispose();
+    _messageController.dispose();
+  }
+
+  sendMessage() async {
+    final lastMessage = _messageController.text.trim();
+    setState(() {
+      _messageController.text = '';
+    });
+
+    final messageId = const Uuid().v1();
+    final lastMessageTs = DateTime.now();
+
+    Map<String, dynamic> messageInfo = {
+      'text': lastMessage,
+      'lastMessageTs': lastMessageTs,
+      'sender': myUserName,
+    };
+
+    await FirestoreMethods()
+        .sendMessage(
+      chatRoomId: widget.chatRoomId,
+      messageId: messageId,
+      messageInfo: messageInfo,
+    )
+        .then(
+      (value) {
+        Map<String, dynamic> lastMessageInfo = {
+          'lastMessage': lastMessage,
+          'lastMessageTs': lastMessageTs,
+        };
+
+        FirestoreMethods().updateLastMessage(
+          chatRoomId: widget.chatRoomId,
+          lastMessageInfo: lastMessageInfo,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final chat = ModalRoute.of(context)!.settings.arguments as Chat;
+    myUserName =
+        FirebaseAuth.instance.currentUser!.email!.replaceAll('@gmail.com', '');
 
     return Scaffold(
       backgroundColor: const Color(0xffECE6E0),
@@ -25,15 +87,21 @@ class ChatDetailScreen extends StatelessWidget {
         leadingWidth: 35,
         title: InkWell(
           onTap: () {
-            Navigator.of(context).pushNamed(ChatInfoScreen.routeName, arguments: chat);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => ChatInfoScreen(
+                  username: widget.username,
+                ),
+              ),
+            );
           },
           child: Row(
             children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/${chat.imageUrl}'),
-              ),
+              const CircleAvatar(
+                  // backgroundImage: AssetImage('assets/images/${chat!.imageUrl}'),
+                  ),
               const SizedBox(width: 5),
-              Text(chat.title),
+              Text(widget.fullName),
             ],
           ),
         ),
@@ -48,22 +116,47 @@ class ChatDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: sentMessages.length,
-        itemBuilder: (context, index) {
-          final message = sentMessages[index];
-          return Row(
-            mainAxisAlignment: message.messageType == MessageType.received
-                ? MainAxisAlignment.start
-                : MainAxisAlignment.end,
-            children: [
-              const SizedBox.shrink(),
-              Flexible(
-                child: message.messageType == MessageType.sent
-                    ? SentMessage(message: message)
-                    : ReceivedMessage(message: message),
-              ),
-            ],
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('chatrooms')
+            .doc(widget.chatRoomId)
+            .collection('chats')
+            .orderBy('lastMessageTs', descending: false)
+            .snapshots(),
+        builder: (
+          context,
+          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+        ) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: snapshot.data?.docs.length,
+            itemBuilder: (context, index) {
+              final chat = snapshot.data?.docs[index];
+              final message = Message(
+                text: chat!['text'],
+                date: DateTime.now(),
+                // imageUrl: '',
+                sender: chat['sender'],
+              );
+              return Row(
+                mainAxisAlignment: chat['sender'] != myUserName
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.end,
+                children: [
+                  const SizedBox.shrink(),
+                  Flexible(
+                    child: chat['sender'] == myUserName
+                        ? SentMessage(message: message)
+                        : ReceivedMessage(message: message),
+                  ),
+                ],
+              );
+            },
           );
         },
       ),
@@ -83,9 +176,10 @@ class ChatDetailScreen extends StatelessWidget {
                   child: Row(
                     children: [
                       buildMoodButton(),
-                      const Expanded(
+                      Expanded(
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: _messageController,
+                          decoration: const InputDecoration(
                             hintText: 'Message',
                             border: InputBorder.none,
                           ),
@@ -138,14 +232,12 @@ class ChatDetailScreen extends StatelessWidget {
 
   Widget buildVoiceButton() {
     return GestureDetector(
-      onLongPress: () {
-        log('Record Audio');
-      },
+      onTap: sendMessage,
       child: const CircleAvatar(
         radius: 25,
         backgroundColor: Color(0xFF00BFA5),
         child: Icon(
-          Icons.keyboard_voice,
+          Icons.send,
           color: Colors.white,
           size: 25,
         ),

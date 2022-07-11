@@ -1,10 +1,25 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:whatsapp/constants/colors.dart';
+
+import 'package:whatsapp/constants/constants.dart';
+import 'package:whatsapp/helpers/auth_methods.dart';
+import 'package:whatsapp/screens/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
   static const routeName = '/profile';
+
+  logout() async {
+    String res = 'Error';
+    try {
+      res = await AuthMethods().logout();
+      log(res);
+    } catch (e) {
+      log(e.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,6 +120,14 @@ class ProfileScreen extends StatelessWidget {
               onPressed: () {},
               icon: const Icon(Icons.edit, color: greenColor),
             ),
+          ),
+          const Divider(),
+          TextButton(
+            onPressed: () async {
+              await logout();
+              Navigator.of(context).pushReplacement(LoginScreen.route);
+            },
+            child: const Text('Log out'),
           ),
         ],
       ),

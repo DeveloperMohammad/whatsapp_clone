@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/models/chat.dart';
-import 'package:whatsapp/widgets/chat_screen/build_vertical_icon_button.dart';
+
+
+import 'package:whatsapp/models/models.dart';
+import 'package:whatsapp/widgets/widgets.dart';
 
 class ChatInfoHeader extends StatelessWidget {
   const ChatInfoHeader({
@@ -30,7 +32,7 @@ class ChatInfoHeader extends StatelessWidget {
               ),
               CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/${chat.imageUrl}'),
+                backgroundImage: NetworkImage(chat.imageUrl),
               ),
               IconButton(
                 onPressed: () {},
@@ -47,9 +49,9 @@ class ChatInfoHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            '+90 32 003 3299',
-            style: TextStyle(
+          Text(
+            chat.lastMessage,
+            style: const TextStyle(
               fontSize: 16,
               color: Color(0xff667781),
               fontWeight: FontWeight.w500,

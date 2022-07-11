@@ -1,31 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/screens/chat_screen/chat_detail_screen.dart';
+import 'package:whatsapp/models/models.dart';
+import 'package:whatsapp/screens/screens.dart';
 
-import '../../models/chat.dart';
-
-class ChatListItem extends StatelessWidget {
+class ChatListItem extends StatefulWidget {
   const ChatListItem({
     Key? key,
     required this.item,
+    required this.chatRoomId,
+    required this.username,
+    required this.imageUrl,
   }) : super(key: key);
 
   final Chat item;
+  final String chatRoomId;
+  final String username;
+  final String imageUrl;
 
+  @override
+  State<ChatListItem> createState() => _ChatListItemState();
+}
+
+class _ChatListItemState extends State<ChatListItem> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.of(context).pushNamed(ChatDetailScreen.routeName, arguments: item);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => ChatDetailScreen(
+              chatRoomId: widget.chatRoomId,
+              fullName: widget.username,
+              username: widget.username,
+              imageUrl: widget.imageUrl,
+            ),
+          ),
+        );
       },
       leading: CircleAvatar(
         radius: 30,
-        backgroundImage: AssetImage('assets/images/${item.imageUrl}'),
+        backgroundImage: NetworkImage(widget.item.imageUrl),
       ),
-      title: Text(item.title),
+      title: Text(widget.username),
       subtitle: Text(
-        item.lastMessage,
+        widget.item.lastMessage,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(color: item.color),
       ),
       trailing: SizedBox(
         child: SizedBox(
@@ -35,18 +53,20 @@ class ChatListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                item.date,
+                widget.item.date,
                 style: TextStyle(
-                  color: item.unreadMessage == 0 ? Colors.black : Colors.green,
+                  color: widget.item.unreadMessage == 0
+                      ? Colors.black
+                      : Colors.green,
                 ),
               ),
-              item.unreadMessage == 0
+              widget.item.unreadMessage == 0
                   ? const SizedBox.shrink()
                   : CircleAvatar(
                       radius: 10,
                       backgroundColor: Colors.green,
                       child: Text(
-                        item.unreadMessage.toString(),
+                        widget.item.unreadMessage.toString(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,

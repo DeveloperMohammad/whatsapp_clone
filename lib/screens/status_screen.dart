@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/models/status.dart';
 
-import '../widgets/status_screen/build_my_status_widget.dart';
-import '../widgets/status_screen/build_status_widget.dart';
-import '../models/status.dart';
+import 'package:whatsapp/models/models.dart';
+import 'package:whatsapp/widgets/widgets.dart';
 
 class StatusScreen extends StatelessWidget {
   const StatusScreen({Key? key}) : super(key: key);

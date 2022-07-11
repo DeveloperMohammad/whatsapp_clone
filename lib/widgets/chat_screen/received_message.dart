@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/models/message.dart';
+
+import 'package:whatsapp/models/models.dart';
 
 class ReceivedMessage extends StatelessWidget {
   const ReceivedMessage({

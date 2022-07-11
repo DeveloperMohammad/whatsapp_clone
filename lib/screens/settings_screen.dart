@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/constants/colors.dart';
-import 'package:whatsapp/screens/profile_screen.dart';
+
+import 'package:whatsapp/constants/constants.dart';
+import 'package:whatsapp/screens/screens.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);

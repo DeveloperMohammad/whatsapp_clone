@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:whatsapp/constants/colors.dart';
-import 'package:whatsapp/constants/enums.dart';
 
-import '../models/call.dart';
+import 'package:whatsapp/constants/constants.dart';
+import 'package:whatsapp/models/models.dart';
 
 class CallScreen extends StatelessWidget {
   const CallScreen({Key? key}) : super(key: key);
