@@ -1,14 +1,10 @@
 import 'dart:typed_data';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:whatsapp/constants/colors.dart';
 import 'package:whatsapp/helpers/auth_methods.dart';
-import 'package:whatsapp/helpers/firestore_methods.dart';
-import 'package:whatsapp/helpers/storage_methods.dart';
 import 'package:whatsapp/helpers/utils.dart';
-import 'package:whatsapp/models/user.dart' as model;
 import 'package:whatsapp/screens/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {

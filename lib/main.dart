@@ -20,8 +20,7 @@ void main() async {
       home: const HomePage(),
       routes: {
         SettingsScreen.routeName: (context) => const SettingsScreen(),
-        ProfileScreen.routeName: (context) => const ProfileScreen(),
-        AddChatScreen.routeName: (context) => AddChatScreen(),
+        AddChatScreen.routeName: (context) => const AddChatScreen(),
       },
     ),
   );

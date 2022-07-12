@@ -6,15 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:whatsapp/constants/constants.dart';
 import 'package:whatsapp/delegates/add_contacts_search_delegate.dart';
 import 'package:whatsapp/helpers/firestore_methods.dart';
-import 'package:whatsapp/models/models.dart';
 import 'package:whatsapp/screens/chat_screen/chat_detail_screen.dart';
 
 class AddChatScreen extends StatelessWidget {
   static const routeName = '/add_chat';
 
-  AddChatScreen({Key? key}) : super(key: key);
-
-  final contacts = dummyContacts;
+  const AddChatScreen({Key? key}) : super(key: key);
 
   getChatRoomIdByUserNames(String me, String you) {
     if (me == you) {
@@ -35,56 +32,50 @@ class AddChatScreen extends StatelessWidget {
     final auth = FirebaseAuth.instance.currentUser;
     final myUserName = auth!.email!.replaceAll('@gmail.com', '');
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: greenColor,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Select contact'),
-            const SizedBox(height: 5),
-            Text(
-              '${contacts.length} contacts',
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-              ),
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .orderBy('username', descending: false)
+          .where('username', isNotEqualTo: myUserName)
+          .snapshots(),
+      builder: (
+        context,
+        AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
+      ) {
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: greenColor,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Select contact'),
+                const SizedBox(height: 5),
+                Text(
+                  '${snapshot.data!.docs.length} contacts',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: AddContactSearchDelegate(),
-              );
-            },
-            icon: const Icon(Icons.search),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: AddContactSearchDelegate(),
+                  );
+                },
+                icon: const Icon(Icons.search),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.more_vert),
+              ),
+            ],
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert),
-          ),
-        ],
-      ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .orderBy('username', descending: false)
-            .where('username', isNotEqualTo: myUserName)
-            .snapshots(),
-        builder: (
-          context,
-          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
-        ) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          return CustomScrollView(
+          body: CustomScrollView(
             slivers: [
               const SliverToBoxAdapter(
                 child: ListTile(
@@ -142,7 +133,6 @@ class AddChatScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    final contact = contacts[index];
                     final data = snapshot.data?.docs[index];
 
                     return ListTile(
@@ -177,8 +167,7 @@ class AddChatScreen extends StatelessWidget {
                       },
                       leading: CircleAvatar(
                         radius: 22,
-                        backgroundImage:
-                            NetworkImage(data!['imageUrl']),
+                        backgroundImage: NetworkImage(data!['imageUrl']),
                       ),
                       title: Text(
                         data['fullName'],
@@ -220,9 +209,9 @@ class AddChatScreen extends StatelessWidget {
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 

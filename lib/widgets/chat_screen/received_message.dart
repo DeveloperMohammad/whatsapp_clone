@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jiffy/jiffy.dart';
 
 import 'package:whatsapp/models/models.dart';
 
@@ -33,7 +34,7 @@ class ReceivedMessage extends StatelessWidget {
           text: message.text,
           children: [
             TextSpan(
-              text: '  ${message.date}',
+              text: '  ${Jiffy(message.date).Hm}',
               style: const TextStyle(
                 fontSize: 12,
                 color: Colors.blueGrey,

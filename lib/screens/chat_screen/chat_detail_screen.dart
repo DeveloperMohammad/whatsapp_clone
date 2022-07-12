@@ -139,7 +139,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
               final chat = snapshot.data?.docs[index];
               final message = Message(
                 text: chat!['text'],
-                date: DateTime.now(),
+                date: chat['lastMessageTs'].toDate(),
                 // imageUrl: '',
                 sender: chat['sender'],
               );

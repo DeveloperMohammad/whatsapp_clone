@@ -1,13 +1,23 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-
 import 'package:whatsapp/constants/constants.dart';
 import 'package:whatsapp/helpers/auth_methods.dart';
 import 'package:whatsapp/screens/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({
+    Key? key,
+    required this.fullName,
+    required this.imageUrl,
+    required this.email,
+    required this.bio,
+  }) : super(key: key);
+
+  final String fullName;
+  final String imageUrl;
+  final String email;
+  final String bio;
 
   static const routeName = '/profile';
 
@@ -32,13 +42,13 @@ class ProfileScreen extends StatelessWidget {
           Center(
             child: Stack(
               children: [
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
                   child: Hero(
                     tag: 'profile_picture',
                     child: CircleAvatar(
                       radius: 80,
-                      backgroundImage: AssetImage('assets/images/photo.jpg'),
+                      backgroundImage: NetworkImage(imageUrl),
                     ),
                   ),
                 ),
@@ -64,16 +74,26 @@ class ProfileScreen extends StatelessWidget {
             leading: const Icon(Icons.person, color: buttonGreyColor),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('Name',
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-                Text('Mohammad Af',
-                    style: TextStyle(fontWeight: FontWeight.w400)),
-                SizedBox(height: 10),
+              children: [
+                const Text(
+                  'Name',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  fullName,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
             subtitle: const Text(
-                'This is not your username or pin. This name will be visible to your contacts.'),
+              'This is not your username or pin. This name will be visible to your contacts.',
+            ),
             trailing: IconButton(
               onPressed: () {},
               icon: const Icon(Icons.edit, color: greenColor),
@@ -86,13 +106,20 @@ class ProfileScreen extends StatelessWidget {
             leading: const Icon(Icons.info_outline, color: buttonGreyColor),
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('About',
-                    style: TextStyle(fontSize: 14, color: Colors.grey)),
-                SizedBox(height: 4),
-                Text('Nice to meet ya!',
-                    style: TextStyle(fontWeight: FontWeight.w400)),
-                SizedBox(height: 10),
+              children: [
+                const Text(
+                  'About',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  bio,
+                  style: const TextStyle(fontWeight: FontWeight.w400),
+                ),
+                const SizedBox(height: 10),
               ],
             ),
             trailing: IconButton(
