@@ -15,12 +15,12 @@ class Status {
 final statuses = [
     Status(
       userName: 'Foto Sushi',
-      imageUrl: 'assets/images/photo3.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
       date: 'Today, 4:29 AM',
     ),
     Status(
       userName: 'Yasin Mohammadi',
-      imageUrl: 'assets/images/photo9.jpg',
+      imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
       date: 'Today, 5:10 AM',
     ),
   ];

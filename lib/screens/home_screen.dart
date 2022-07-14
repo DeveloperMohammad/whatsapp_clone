@@ -1,11 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-
-//! My own classess
-import 'screens.dart';
-import 'package:whatsapp/widgets/widgets.dart';
 import 'package:whatsapp/delegates/my_search_delegate.dart';
+import 'package:whatsapp/screens/screens.dart';
+import 'package:whatsapp/widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -40,20 +38,20 @@ class HomeScreen extends StatelessWidget {
               },
               itemBuilder: (context) => [
                 const PopupMenuItem(
-                  child: Text('New group'),
                   value: 'new group',
+                  child: Text('New group'),
                 ),
                 const PopupMenuItem(
-                  child: Text('New broadcast'),
                   value: 'new broadcast',
+                  child: Text('New broadcast'),
                 ),
                 const PopupMenuItem(
-                  child: Text('Linked devices'),
                   value: 'linked devices',
+                  child: Text('Linked devices'),
                 ),
                 const PopupMenuItem(
-                  child: Text('Starred messages'),
                   value: 'starred messages',
+                  child: Text('Starred messages'),
                 ),
                 PopupMenuItem(
                   enabled: true,

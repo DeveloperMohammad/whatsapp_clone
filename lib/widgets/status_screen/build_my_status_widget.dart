@@ -9,7 +9,7 @@ Widget buildMyStatusWidget() {
           children: [
             const CircleAvatar(
               radius: 30,
-              backgroundImage: AssetImage('assets/images/photo.jpg'),
+              backgroundImage: NetworkImage('https://images.unsplash.com/photo-1556157382-97eda2d62296?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80'),
             ),
             Positioned(
               bottom: 0,

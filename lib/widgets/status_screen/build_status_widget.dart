@@ -9,7 +9,7 @@ Widget buildStatusWidget({
     contentPadding: EdgeInsets.zero,
     leading: CircleAvatar(
       radius: 30,
-      backgroundImage: AssetImage(imageUrl),
+      backgroundImage: NetworkImage(imageUrl),
     ),
     title: Text(
       userName,

@@ -47,7 +47,7 @@ class CallScreen extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           radius: 30,
-          backgroundImage: AssetImage(call.imageUrl),
+          backgroundImage: NetworkImage(call.imageUrl),
         ),
         title: Text(
           call.userName,

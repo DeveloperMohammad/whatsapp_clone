@@ -97,9 +97,9 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
           },
           child: Row(
             children: [
-              const CircleAvatar(
-                  // backgroundImage: AssetImage('assets/images/${chat!.imageUrl}'),
-                  ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(widget.imageUrl),
+              ),
               const SizedBox(width: 5),
               Text(widget.fullName),
             ],

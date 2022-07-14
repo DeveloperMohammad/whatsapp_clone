@@ -52,7 +52,8 @@ class ChatsScreen extends StatelessWidget {
                     ),
                     chatRoomId: item['chatRoomId'],
                     username: username,
-                    imageUrl: 'photo${index + 1}.jpg',
+                    imageUrl:
+                        'https://th.bing.com/th/id/R.86ddf59f73f9ad652fa8d5aa4b91803b?rik=FkmJyBJWUlailg&pid=ImgRaw&r=0',
                   ),
                 );
               },

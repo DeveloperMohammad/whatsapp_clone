@@ -42,7 +42,8 @@ class AddChatScreen extends StatelessWidget {
         context,
         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot,
       ) {
-        return Scaffold(
+        if(snapshot.hasData) {
+          return Scaffold(
           appBar: AppBar(
             backgroundColor: greenColor,
             title: Column(
@@ -211,7 +212,12 @@ class AddChatScreen extends StatelessWidget {
             ],
           ),
         );
-      },
+        }
+
+        return const Center(
+          child: CircularProgressIndicator()
+        );
+       },
     );
   }
 
